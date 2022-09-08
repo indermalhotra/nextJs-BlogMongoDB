@@ -1,6 +1,9 @@
-const handler = (req, res) => {
+import { MongoClient } from "mongodb";
+
+const handler = async(req, res) => {
+    let eventId = req.query.eventId;
     if (req.method === "POST") {
-        let eventId = req.query.eventId;
+        
         const dataRecived = JSON.parse(req.body);
 
         const email = dataRecived.email;
@@ -19,17 +22,35 @@ const handler = (req, res) => {
             comment,
         }
 
+       // CONNECTED TO DATABASE newsletter1
+       const client = await MongoClient.connect('mongodb+srv://ekum:xOVeZSngVLNm7WSH@cluster0.kv1cwcj.mongodb.net/newsletter1?retryWrites=true&w=majority');
+       const db = client.db();
+
+       // CREATEING COLLECTION IN newsletter1 i.e emails
+       const comments = db.collection('comments');
+
+       //INSERTING DATA TO newsletter1 database emails collection.
+       await comments.insertOne({...data});
+
+       client.close();
+
         res.status(201).json({ message: "Success", data: data });
     }
 
     if(req.method=== 'GET'){
-        const dummyData = [
-            {id:'e1', name:'Inder', text:'comment 1'},
-            {id:'e2', name:'Ekum', text:'comment 2'},
-            {id:'e3', name:'Preeti', text:'comment 3'}
-        ]
+        // CONNECTED TO DATABASE newsletter1
+       const client = await MongoClient.connect('mongodb+srv://ekum:xOVeZSngVLNm7WSH@cluster0.kv1cwcj.mongodb.net/newsletter1?retryWrites=true&w=majority');
+       const db = client.db();
 
-        res.status(200).json({comments:dummyData});
+       // CREATEING COLLECTION IN newsletter1 i.e emails
+       const comments = db.collection('comments');
+
+        const result = await comments.find().toArray();
+        console.log(result);
+
+        const resultFiltered = result.filter(data=> data.id === eventId);
+
+        res.status(200).json({comments:resultFiltered});
     }
 }
 

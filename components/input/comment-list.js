@@ -6,10 +6,10 @@ function CommentList(props) {
     return<p>Data Loading...</p>
   }
 
-  const commentList = props.comments.map(data=> {
+  const commentList = props.comments.map((data, indx)=> {
     return (
-      <li key={data.id}>
-        <p>{data.text}</p>
+      <li key={indx}>
+        <p>{data.comment}</p>
         <div>
           By <address>{data.name}</address>
         </div>

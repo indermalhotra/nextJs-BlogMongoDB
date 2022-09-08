@@ -3,12 +3,16 @@ import { useEffect, useRef, useState } from 'react';
 
 function NewsletterRegistration() {
   const [emailValid, setEmailValid] = useState(true);
+  const [alreadyExist, setAlreadyExist] = useState(false);
+  const [searchingData, setSearchingData] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
 
   // fetch user input (state or refs)
   const emailRef = useRef();
 
 
   function registrationHandler(event) {
+    setSearchingData(true);
     event.preventDefault();
     let emailId = emailRef.current.value;
 
@@ -25,7 +29,7 @@ function NewsletterRegistration() {
     }
 
     // send valid data to API
-    const fetchData = async () => {
+    const postData = async () => {
       const request = await fetch('/api/newsletter', {
         method: 'POST',
         body: JSON.stringify(emailData),
@@ -34,9 +38,30 @@ function NewsletterRegistration() {
         }
       });
       const response = await request.json();
-      console.log(response);
+      setSubscribed(response.message); //message
     }
-    fetchData();
+
+    // get data from API to check if email already exis
+    const validateThenPost = async() => {
+       const request = await fetch('/api/newsletter');
+       const resp = await request.json();
+
+       // checking if email already exist in database
+       let ifExist = resp.emailId.findIndex(email=>{
+        return email.emailId === emailId
+       });
+
+       if(ifExist < 0){
+          postData();
+          setSearchingData(false);
+          setAlreadyExist(false);
+       }else{
+          setSearchingData(false);
+          setAlreadyExist(true);
+       }
+       console.log(ifExist);
+    }
+    validateThenPost();
   }
 
  
@@ -57,6 +82,9 @@ return (
         <button>Register</button>
       </div>
       {!emailValid && <p className={classes.err}>Invalid Email</p>}
+      {searchingData && <p className={classes.wait}>working please wait...</p>}
+      {alreadyExist && !searchingData && <p className={classes.err}>Already Exists</p>}
+      {!alreadyExist && !searchingData && emailValid && <p className={classes.wait}>{subscribed}</p>}
     </form>
   </section>
 );

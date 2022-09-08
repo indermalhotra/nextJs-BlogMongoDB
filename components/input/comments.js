@@ -27,6 +27,7 @@ function Comments(props) {
   }
 
   function addCommentHandler(commentData) {
+    getData();
     // send data to API
     const postData = async () => {
       const request = await fetch(`/api/events/${eventID}`, {
@@ -46,6 +47,7 @@ function Comments(props) {
 
   return (
     <section className={classes.comments}>
+      {console.log(allComments)}
       <button onClick={toggleCommentsHandler}>
         {showComments ? 'Hide' : 'Show'} Comments
       </button>
