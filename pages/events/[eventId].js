@@ -9,7 +9,9 @@ import ErrorAlert from '../../components/ui/error-alert';
 import Comments from '../../components/input/comments';
 
 function EventDetailPage(props) {
-  const event = props.selectedEvent;
+  console.log(props.selectedEvent.events);
+  let event = props.selectedEvent.events[0];
+  
 
   if (!event) {
     return (
@@ -59,7 +61,7 @@ export async function getStaticProps(context) {
 export async function getStaticPaths() {
   const events = await getFeaturedEvents();
 
-  const paths = events.map(event => ({ params: { eventId: event.id } }));
+  const paths = events.events.map(event => ({ params: { eventId: event.id } }));
 
   return {
     paths: paths,

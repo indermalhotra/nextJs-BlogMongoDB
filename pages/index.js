@@ -5,6 +5,7 @@ import EventList from '../components/events/event-list';
 import NewsletterRegistration from '../components/input/newsletter-registration';
 
 function HomePage(props) {
+ console.log(props);
   return (
     <div>
       <Head>
@@ -21,11 +22,11 @@ function HomePage(props) {
 }
 
 export async function getStaticProps() {
-  const featuredEvents = await getFeaturedEvents();
 
+  const response = await getFeaturedEvents();
   return {
     props: {
-      events: featuredEvents,
+      events: response.events,
     },
     revalidate: 1800,
   };

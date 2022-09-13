@@ -1,11 +1,14 @@
 import classes from './comment-list.module.css';
 
 function CommentList(props) {
-  console.log(props);
+
+  console.log(props)
+  
   if(!props){
     return<p>Data Loading...</p>
   }
-
+  
+  console.log(props);
   const commentList = props.comments.map((data, indx)=> {
     return (
       <li key={indx}>

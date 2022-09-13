@@ -1,27 +1,20 @@
-export async function getAllEvents() {
-  const response = await fetch('https://nextjsclienfetch-default-rtdb.firebaseio.com//eventes.json');
-  const data = await response.json();
-
-  const events = [];
-
-  for (const key in data) {
-    events.push({
-      id: key,
-      ...data[key]
-    });
-  }
-
-  return events;
+export const getAllEvents = async () => {
+  const request = await fetch('http://localhost:3000/api/eventData');
+  const response = await request.json();
+  return await response;
 }
 
 export async function getFeaturedEvents() {
-  const allEvents = await getAllEvents();
-  return allEvents.filter((event) => event.isFeatured);
+  const request = await fetch('http://localhost:3000/api/eventFeature');
+  const response = await request.json();
+  return await response;
 }
 
 export async function getEventById(id) {
-  const allEvents = await getAllEvents();
-  return allEvents.find((event) => event.id === id);
+  const request = await fetch(`http://localhost:3000/api/${id}`);
+  const response = await request.json();
+  return await response;
+  
 }
 
 export async function getFilteredEvents(dateFilter) {
@@ -29,10 +22,14 @@ export async function getFilteredEvents(dateFilter) {
 
   const allEvents = await getAllEvents();
 
-  let filteredEvents = allEvents.filter((event) => {
+  
+
+  let filteredEvents = await allEvents.events.filter((event) => {
     const eventDate = new Date(event.date);
     return eventDate.getFullYear() === year && eventDate.getMonth() === month - 1;
   });
+
+  console.log(filteredEvents)
 
   return filteredEvents;
 }

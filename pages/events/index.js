@@ -35,13 +35,12 @@ function AllEventsPage(props) {
 }
 
 export async function getStaticProps() {
-  const events = await getAllEvents();
-
+  const response = await getAllEvents();
   return {
     props: {
-      events: events,
+      events: response.events,
     },
-    revalidate: 60
+    revalidate: 1800,
   };
 }
 
